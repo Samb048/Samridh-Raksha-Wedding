@@ -1,0 +1,428 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.inv-root {
+  font-family: 'EB Garamond', serif;
+  background: #1a0a00;
+  color: #f5e6c8;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.page { display: none; animation: fadeIn 1s ease forwards; }
+.page.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+@keyframes floatAnim { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+@keyframes shimmer { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+@keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes petalFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+}
+@keyframes diwaSlide { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes borderDraw {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes goldGlow { 0%,100% { text-shadow: 0 0 10px #d4971a44; } 50% { text-shadow: 0 0 25px #d4971a99, 0 0 50px #d4971a44; } }
+
+.bg-pattern {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, #3d1a0088 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, #2a0e0088 0%, transparent 50%),
+    linear-gradient(135deg, #1a0a00 0%, #2d1200 40%, #1a0800 100%);
+}
+
+.mandala-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.06;
+  display: flex; align-items: center; justify-content: center;
+}
+.mandala-bg svg { width: 90vmin; height: 90vmin; animation: rotateSlow 120s linear infinite; }
+
+.petals-container { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.petal {
+  position: absolute; font-size: 16px; animation: petalFall linear infinite;
+  user-select: none;
+}
+
+.content { position: relative; z-index: 10; }
+
+/* === PAGE 1: COVER === */
+.cover {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 40px 24px;
+}
+.cover-border {
+  position: absolute; inset: 16px; pointer-events: none;
+}
+.cover-border svg { width: 100%; height: 100%; }
+.cover-border svg rect {
+  fill: none; stroke: #c8892a; stroke-width: 1.5;
+  stroke-dasharray: 1000;
+  animation: borderDraw 3s ease forwards 0.3s;
+  stroke-dashoffset: 1000;
+}
+.cover-top-orn { font-size: 32px; animation: floatAnim 4s ease-in-out infinite; margin-bottom: 16px; }
+.bismi { font-size: 13px; letter-spacing: 3px; color: #c8892a; text-transform: uppercase; margin-bottom: 20px; opacity: 0; animation: fadeInUp 1s ease forwards 0.5s; }
+.cover-title {
+  font-family: 'Cinzel', serif; font-size: clamp(13px, 3.5vw, 18px); font-weight: 400;
+  letter-spacing: 4px; color: #c8892a; text-transform: uppercase; margin-bottom: 24px;
+  opacity: 0; animation: fadeInUp 1s ease forwards 0.8s;
+}
+.cover-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 12vw, 72px);
+  font-weight: 300; line-height: 1.05; color: #f5e6c8;
+  animation: goldGlow 4s ease-in-out infinite, scaleIn 1.2s ease forwards 1s;
+  opacity: 0;
+}
+.cover-amp {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: clamp(24px, 7vw, 44px); color: #c8892a; display: block;
+  margin: 4px 0; animation: floatAnim 5s ease-in-out infinite 1s;
+}
+.cover-date {
+  margin-top: 28px; font-size: clamp(14px, 3.5vw, 18px); letter-spacing: 2px;
+  color: #d4a84b; opacity: 0; animation: fadeInUp 1s ease forwards 1.5s;
+}
+.cover-divider { width: 120px; height: 1px; background: linear-gradient(to right, transparent, #c8892a, transparent); margin: 16px auto; }
+.cover-subtitle { font-size: 14px; color: #c8892a99; letter-spacing: 2px; opacity: 0; animation: fadeInUp 1s ease forwards 1.8s; }
+.cover-floral { font-size: 28px; margin-top: 20px; animation: floatAnim 3s ease-in-out infinite 0.5s; opacity: 0; animation: fadeInUp 1s ease forwards 2s; }
+
+/* === NAV DOTS === */
+.nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 10px; align-items: center; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; background: #c8892a44; border: 1px solid #c8892a88; cursor: pointer; transition: all 0.3s; }
+.nav-dot.active { background: #c8892a; transform: scale(1.3); }
+.nav-btn {
+  background: #c8892a22; border: 1px solid #c8892a66; color: #c8892a;
+  padding: 6px 16px; border-radius: 20px; cursor: pointer; font-family: 'Cinzel', serif;
+  font-size: 11px; letter-spacing: 2px; transition: all 0.3s; text-transform: uppercase;
+}
+.nav-btn:hover { background: #c8892a44; }
+
+/* === PAGE 2: INVITATION TEXT === */
+.inv-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 28px; text-align: center; }
+.section-orn { font-size: 26px; margin-bottom: 16px; animation: floatAnim 4s ease-in-out infinite; }
+.section-heading {
+  font-family: 'Cinzel', serif; font-size: clamp(11px, 3vw, 14px); letter-spacing: 4px;
+  color: #c8892a; text-transform: uppercase; margin-bottom: 24px;
+}
+.inv-card {
+  background: linear-gradient(145deg, #2d150088 0%, #1a0a0099 100%);
+  border: 1px solid #c8892a44; border-radius: 4px;
+  padding: 32px 24px; max-width: 560px; width: 100%;
+  backdrop-filter: blur(4px);
+}
+.inv-text { font-size: clamp(14px, 3.5vw, 17px); line-height: 1.9; color: #f0ddb8; }
+.inv-text .highlight { color: #d4a84b; font-size: 1.15em; font-weight: 600; }
+.inv-text .gold { color: #c8892a; font-style: italic; }
+.divider-orn { color: #c8892a; font-size: 20px; margin: 20px 0; letter-spacing: 8px; }
+.rsvp-names { font-family: 'Cormorant Garamond', serif; font-size: clamp(15px, 4vw, 20px); color: #d4a84b; margin-top: 8px; }
+
+/* === PAGE 3: ACCOMMODATION === */
+.accom-card {
+  background: linear-gradient(145deg, #2d150088, #1a0a0099);
+  border: 1px solid #c8892a44; border-radius: 4px;
+  padding: 28px 24px; max-width: 520px; width: 100%;
+}
+.accom-hotel { font-family: 'Cinzel', serif; font-size: clamp(16px, 4vw, 22px); color: #d4a84b; margin-bottom: 6px; }
+.accom-addr { font-size: clamp(13px, 3.2vw, 16px); color: #c8892a99; line-height: 1.7; }
+.accom-dates { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.accom-badge {
+  background: #c8892a22; border: 1px solid #c8892a66; color: #c8892a;
+  padding: 4px 14px; border-radius: 20px; font-size: 12px; letter-spacing: 1px;
+  font-family: 'Cinzel', serif;
+}
+
+/* === PAGE 4: EVENTS === */
+.events-page { min-height: 100vh; padding: 50px 20px 80px; }
+.events-title { font-family: 'Cinzel', serif; font-size: clamp(12px, 3vw, 15px); letter-spacing: 4px; color: #c8892a; text-align: center; text-transform: uppercase; margin-bottom: 32px; }
+.day-header {
+  font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 5vw, 28px);
+  color: #d4a84b; text-align: center; margin: 28px 0 6px;
+  border-bottom: 1px solid #c8892a44; padding-bottom: 10px;
+}
+.day-sub { font-size: 12px; letter-spacing: 2px; color: #c8892a88; text-align: center; margin-bottom: 20px; font-family: 'Cinzel', serif; text-transform: uppercase; }
+.session-label {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; color: #c8892a;
+  text-transform: uppercase; margin: 16px 0 10px; display: flex; align-items: center; gap: 10px;
+}
+.session-label::before, .session-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, #c8892a44); }
+.session-label::after { background: linear-gradient(to left, transparent, #c8892a44); }
+.event-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 16px; margin-bottom: 8px;
+  background: #c8892a0d; border-left: 2px solid #c8892a66;
+  border-radius: 0 4px 4px 0;
+  animation: diwaSlide 0.6s ease forwards;
+  opacity: 0;
+}
+.event-icon { font-size: 20px; min-width: 28px; text-align: center; }
+.event-name { font-size: clamp(14px, 3.5vw, 17px); color: #f0ddb8; flex: 1; }
+.event-time { font-size: 12px; color: #c8892a99; font-family: 'Cinzel', serif; white-space: nowrap; }
+
+/* === PAGE 5: COMPLIMENTS === */
+.comp-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; }
+.comp-orn { font-size: 40px; animation: floatAnim 3s ease-in-out infinite; margin-bottom: 20px; }
+.comp-label { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 4px; color: #c8892a; text-transform: uppercase; margin-bottom: 24px; }
+.comp-names { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 5vw, 26px); color: #d4a84b; line-height: 1.8; }
+.comp-final { margin-top: 40px; font-size: 14px; color: #c8892a88; letter-spacing: 1px; font-style: italic; }
+.big-names { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 8vw, 48px); font-weight: 300; color: #f5e6c8; line-height: 1.1; margin: 16px 0; animation: goldGlow 4s ease-in-out infinite 1s; }
+</style>
+
+<div class="inv-root">
+  <div class="bg-pattern"></div>
+  <div class="mandala-bg">
+    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(200,200)">
+        <circle r="190" fill="none" stroke="#c8892a" stroke-width="0.5" stroke-dasharray="4 8"/>
+        <circle r="160" fill="none" stroke="#c8892a" stroke-width="0.3"/>
+        <circle r="120" fill="none" stroke="#c8892a" stroke-width="0.5" stroke-dasharray="2 6"/>
+        <circle r="80" fill="none" stroke="#c8892a" stroke-width="0.3"/>
+        <circle r="40" fill="none" stroke="#c8892a" stroke-width="0.5"/>
+        <g id="petal-group">
+          <ellipse cx="0" cy="-160" rx="12" ry="30" fill="none" stroke="#c8892a" stroke-width="0.5"/>
+          <ellipse cx="0" cy="-160" rx="8" ry="20" fill="#c8892a" opacity="0.2"/>
+        </g>
+        <use href="#petal-group" transform="rotate(30)"/>
+        <use href="#petal-group" transform="rotate(60)"/>
+        <use href="#petal-group" transform="rotate(90)"/>
+        <use href="#petal-group" transform="rotate(120)"/>
+        <use href="#petal-group" transform="rotate(150)"/>
+        <use href="#petal-group" transform="rotate(180)"/>
+        <use href="#petal-group" transform="rotate(210)"/>
+        <use href="#petal-group" transform="rotate(240)"/>
+        <use href="#petal-group" transform="rotate(270)"/>
+        <use href="#petal-group" transform="rotate(300)"/>
+        <use href="#petal-group" transform="rotate(330)"/>
+        <g id="leaf-group">
+          <path d="M0,-80 Q15,-55 0,-30 Q-15,-55 0,-80" fill="#c8892a" opacity="0.25"/>
+        </g>
+        <use href="#leaf-group" transform="rotate(45)"/>
+        <use href="#leaf-group" transform="rotate(90)"/>
+        <use href="#leaf-group" transform="rotate(135)"/>
+        <use href="#leaf-group" transform="rotate(180)"/>
+        <use href="#leaf-group" transform="rotate(225)"/>
+        <use href="#leaf-group" transform="rotate(270)"/>
+        <use href="#leaf-group" transform="rotate(315)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="petals-container" id="petals"></div>
+
+  <div class="content">
+    <!-- PAGE 1: COVER -->
+    <div class="page active" id="page-1">
+      <div class="cover">
+        <div class="cover-border">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="98" height="98" stroke="#c8892a" stroke-width="0.5" fill="none" stroke-dasharray="200" stroke-dashoffset="200" style="animation: borderDraw 3s ease forwards 0.3s"/>
+            <rect x="2.5" y="2.5" width="95" height="95" stroke="#c8892a" stroke-width="0.2" fill="none" stroke-dasharray="200" stroke-dashoffset="200" style="animation: borderDraw 3s ease forwards 0.8s" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="cover-top-orn">🪔✨🪔</div>
+        <div class="bismi">~ शुभ विवाह ~</div>
+        <div class="cover-title">Wedding Invitation</div>
+        <div class="cover-names" style="animation-delay:1s">
+          Samridh
+          <span class="cover-amp">&amp;</span>
+          Raksha
+        </div>
+        <div class="cover-date">
+          <div>9th July, 2026 &nbsp;|&nbsp; Thursday</div>
+          <div class="cover-divider"></div>
+          <div style="font-size:13px; letter-spacing:2px; color:#c8892a88">Jodhpur, Rajasthan</div>
+        </div>
+        <div class="cover-floral" style="opacity:0; animation: fadeInUp 1s ease forwards 2.2s">🌸 🏵️ 🌸</div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: INVITATION TEXT -->
+    <div class="page" id="page-2">
+      <div class="inv-page">
+        <div class="section-orn">🕉️</div>
+        <div class="section-heading">With Love &amp; Blessings</div>
+        <div class="inv-card">
+          <div class="inv-text">
+            With immense pleasure, we invite you to the wedding ceremony of our beloved son<br><br>
+            <span class="highlight">Samridh Bhatnagar</span><br>
+            <span style="font-size:0.85em; color:#c8892a88">on 9th July 2026</span><br><br>
+            <span class="gold">Your gracious presence and blessings will greatly enhance the joy and grandeur of this auspicious occasion.</span>
+          </div>
+          <div class="divider-orn">✦ ✦ ✦</div>
+          <div class="inv-text" style="font-size:clamp(13px,3vw,15px)">
+            <span class="highlight">Samridh Bhatnagar</span><br>
+            Grandson of Late Mrs. Sudha Bhatnagar<br>
+            &amp; Mr. Murli Manohar Swaroop Bhatnagar,<br>
+            and Ms. Mithlesh Bhatnagar<br><br>
+            Son of<br>
+            <span style="color:#d4a84b">Mrs. Aarti Bhatnagar &amp; Mr. Anupam Bhatnagar</span>
+          </div>
+          <div class="divider-orn">🌸</div>
+          <div class="inv-text" style="font-size:clamp(12px,2.8vw,14px); color:#c8892a99">
+            RSVP
+          </div>
+          <div class="rsvp-names">Dr. V. P. Bhatnagar<br>Anurag Bhatnagar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: ACCOMMODATION -->
+    <div class="page" id="page-3">
+      <div class="inv-page">
+        <div class="section-orn">🏨</div>
+        <div class="section-heading">Accommodation</div>
+        <div class="inv-text" style="max-width:480px; margin-bottom:24px; color:#c8892a99; font-size:clamp(13px,3.2vw,16px)">
+          Accommodation arrangements have been made for you at:
+        </div>
+        <div class="accom-card">
+          <div class="accom-hotel">🏛️ Rester Select</div>
+          <div class="accom-addr">
+            ITI Circle<br>
+            Heavy Industrial Area, Phase II<br>
+            Basni, Jodhpur
+          </div>
+          <div class="accom-dates">
+            <span class="accom-badge">8th July 2026</span>
+            <span class="accom-badge">9th July 2026</span>
+          </div>
+        </div>
+        <div style="margin-top:28px; font-size:clamp(14px,3.5vw,17px); color:#f0ddb8; font-style:italic; max-width:440px; text-align:center; line-height:1.8;">
+          "We look forward to celebrating this memorable occasion with you and your family."
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: EVENTS -->
+    <div class="page" id="page-4">
+      <div class="events-page">
+        <div class="section-orn" style="text-align:center">📅</div>
+        <div class="events-title">Events Schedule</div>
+
+        <!-- DAY 1 -->
+        <div class="day-header">8th July 2026</div>
+        <div class="day-sub">Wednesday</div>
+
+        <div class="session-label">🌅 Morning</div>
+        <div class="event-item" style="animation-delay:0.1s"><span class="event-icon">🐘</span><span class="event-name">Ganpati Puja</span></div>
+        <div class="event-item" style="animation-delay:0.2s"><span class="event-icon">🙏</span><span class="event-name">Bhat</span></div>
+        <div class="event-item" style="animation-delay:0.3s"><span class="event-icon">🎋</span><span class="event-name">Mandha</span></div>
+        <div class="event-item" style="animation-delay:0.4s"><span class="event-icon">💛</span><span class="event-name">Haldi</span></div>
+
+        <div class="session-label">🌆 Evening</div>
+        <div class="event-item" style="animation-delay:0.5s"><span class="event-icon">🎶</span><span class="event-name">Sangeet</span></div>
+
+        <!-- DAY 2 -->
+        <div class="day-header" style="margin-top:36px">9th July 2026</div>
+        <div class="day-sub">Thursday — The Wedding Day</div>
+
+        <div class="session-label">🌅 Morning</div>
+        <div class="event-item" style="animation-delay:0.1s"><span class="event-icon">🐎</span><span class="event-name">Barat Departure</span><span class="event-time">10:00 AM</span></div>
+        <div class="event-item" style="animation-delay:0.2s"><span class="event-icon">🍽️</span><span class="event-name">Breakfast</span></div>
+        <div class="event-item" style="animation-delay:0.3s"><span class="event-icon">💐</span><span class="event-name">Jai Mala</span></div>
+        <div class="event-item" style="animation-delay:0.4s"><span class="event-icon">🔥</span><span class="event-name">Phere</span><span class="event-time">12 Noon – 2 PM</span></div>
+        <div class="event-item" style="animation-delay:0.5s"><span class="event-icon">🥂</span><span class="event-name">Luncheon</span></div>
+
+        <div class="session-label">🌆 Evening</div>
+        <div class="event-item" style="animation-delay:0.6s"><span class="event-icon">🎊</span><span class="event-name">Reception</span><span class="event-time">7:30 PM onwards</span></div>
+        <div class="event-item" style="animation-delay:0.7s"><span class="event-icon">🥹</span><span class="event-name">Vidayi</span><span class="event-time">12:30 AM</span></div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: COMPLIMENTS -->
+    <div class="page" id="page-5">
+      <div class="comp-page">
+        <div class="comp-orn">🌸</div>
+        <div class="big-names">Samridh<br><span style="font-style:italic; color:#c8892a; font-size:0.6em">&amp;</span><br>Raksha</div>
+        <div style="font-family:'Cinzel', serif; font-size:11px; letter-spacing:3px; color:#c8892a; text-transform:uppercase; margin:8px 0 32px">9 · July · 2026</div>
+        <div class="divider-orn">✦ ✦ ✦</div>
+        <div class="comp-label" style="margin-top:24px">With Best Compliments</div>
+        <div class="comp-names">
+          Dr. Aishwarya Bhatnagar<br>
+          Dr. Aayush Bhatnagar
+        </div>
+        <div class="comp-final" style="margin-top:40px">
+          🪔 &nbsp; Wishing the couple a lifetime of love &amp; togetherness &nbsp; 🪔
+        </div>
+        <div style="margin-top:40px; font-size:13px; color:#c8892a44; letter-spacing:1px">
+          ~ शुभ विवाह ~
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <button class="nav-btn" onclick="changePage(-1)">◀</button>
+    <div class="nav-dot active" onclick="goPage(1)" title="Cover"></div>
+    <div class="nav-dot" onclick="goPage(2)" title="Invitation"></div>
+    <div class="nav-dot" onclick="goPage(3)" title="Accommodation"></div>
+    <div class="nav-dot" onclick="goPage(4)" title="Events"></div>
+    <div class="nav-dot" onclick="goPage(5)" title="Compliments"></div>
+    <button class="nav-btn" onclick="changePage(1)">▶</button>
+  </div>
+</div>
+
+<script>
+let currentPage = 1;
+const totalPages = 5;
+
+function goPage(n) {
+  document.getElementById('page-' + currentPage).classList.remove('active');
+  document.querySelectorAll('.nav-dot')[currentPage - 1].classList.remove('active');
+  currentPage = Math.max(1, Math.min(totalPages, n));
+  const p = document.getElementById('page-' + currentPage);
+  p.classList.add('active');
+  p.style.animation = 'none';
+  void p.offsetWidth;
+  p.style.animation = '';
+  document.querySelectorAll('.nav-dot')[currentPage - 1].classList.add('active');
+
+  if (currentPage === 4) {
+    document.querySelectorAll('.event-item').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = `diwaSlide 0.6s ease forwards ${i * 0.08 + 0.1}s`;
+    });
+  }
+}
+
+function changePage(dir) { goPage(currentPage + dir); }
+
+// Petal generator
+const petalEmojis = ['🌸', '🌺', '🌼', '🌹', '✿', '❀'];
+const container = document.getElementById('petals');
+for (let i = 0; i < 22; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+  p.style.left = (Math.random() * 100) + '%';
+  p.style.top = '-30px';
+  p.style.fontSize = (10 + Math.random() * 12) + 'px';
+  p.style.animationDuration = (6 + Math.random() * 10) + 's';
+  p.style.animationDelay = (Math.random() * 12) + 's';
+  p.style.opacity = (0.3 + Math.random() * 0.5).toString();
+  container.appendChild(p);
+}
+
+// Swipe support
+let startX = 0;
+document.querySelector('.inv-root').addEventListener('touchstart', e => startX = e.touches[0].clientX);
+document.querySelector('.inv-root').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - startX;
+  if (Math.abs(dx) > 50) changePage(dx < 0 ? 1 : -1);
+});
+</script>
